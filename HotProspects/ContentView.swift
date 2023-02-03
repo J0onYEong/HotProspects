@@ -8,16 +8,31 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var prospects = Prospects()
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        TabView {
+            ProspectsView(filterType: .none)
+                .tabItem {
+                    Label("Everyone", systemImage: "person.3")
+                }
+            ProspectsView(filterType: .contacted)
+                .tabItem {
+                    Label("contacted", systemImage: "checkmark.circle")
+                }
+            ProspectsView(filterType: .uncontacted)
+                .tabItem {
+                    Label("uncontacted", systemImage: "questionmark.diamond")
+                }
+            UserInformationView()
+                .tabItem {
+                    Label("user information", systemImage: "person.crop.square")
+                }
         }
-        .padding()
+        .environmentObject(prospects)
     }
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
