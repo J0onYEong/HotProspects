@@ -11,14 +11,46 @@ class Prospect: Identifiable, Codable {
     var id = UUID()
     var name = "Anonymous"
     var emailAddress = ""
-    var isContacted = false
+    // It makes is this property modified in Prospects and read from outside. but can't be modified by outside
+    fileprivate(set) var isContacted = false
 }
 
 
 @MainActor class Prospects: ObservableObject {
-    @Published var people: [Prospect]
+    let key = "SavedData"
+    
+    @Published private(set) var people: [Prospect]
     
     init() {
+        if let loadedData = UserDefaults.standard.data(forKey: key) {
+            if let decodedData = try? JSONDecoder().decode([Prospect].self, from: loadedData) {
+                self.people = decodedData
+                return
+            }
+            print("data encoding error")
+            self.people = []
+            return
+        }
+        print("data loading error")
         self.people = []
+    }
+    
+    func add(_ prospect: Prospect) {
+        people.append(prospect)
+        save()
+    }
+    
+    func toggle(_ prospect: Prospect) {
+        prospect.isContacted.toggle()
+        save()
+        objectWillChange.send()
+    }
+    
+    func save() {
+        guard let encodedData = try? JSONEncoder().encode(people) else {
+            print("enocoding error")
+            return
+        }
+        UserDefaults.standard.setValue(encodedData, forKey: key)
     }
 }

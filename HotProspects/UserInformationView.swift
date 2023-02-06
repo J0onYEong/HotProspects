@@ -8,12 +8,13 @@
 import SwiftUI
 import CoreImage
 import CoreImage.CIFilterBuiltins
+import UIKit
 
 struct UserInformationView: View {
     
     @State private var name = ""
     @State private var address = ""
-    @State private var qRImage: Image?
+    @State private var qRImage: UIImage?
     
     let filter = CIFilter.qrCodeGenerator()
     let context = CIContext()
@@ -62,7 +63,7 @@ struct UserInformationView: View {
                 VStack(spacing: 0) {
                     Button {
                         withAnimation {
-                            qRImage = Image(uiImage: makeStringToQrCode(from: "\(name)\n\(address)"))
+                            qRImage = makeStringToQrCode(from: "\(name)\n\(address)")
                         }
                     } label: {
                         ZStack {
@@ -77,12 +78,19 @@ struct UserInformationView: View {
                     }
                     .padding()
                     if let unwrappedImg = qRImage {
-                        unwrappedImg
+                        Image(uiImage: unwrappedImg)
                             .interpolation(.none)
                             .resizable()
                             .scaledToFit()
                             .padding()
                             .transition(.scale)
+                            .contextMenu {
+                                Button {
+                                    ImageSaver().writeToPhotoAlbum(inputImg: unwrappedImg)
+                                } label: {
+                                    Label("save image", systemImage: "square.and.arrow.down")
+                                }
+                            }
                     }
                     Spacer()
                 }

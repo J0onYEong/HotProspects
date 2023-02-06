@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CodeScanner
+import UserNotifications
 
 struct ProspectsView: View {
     enum FilterType {
@@ -22,6 +23,7 @@ struct ProspectsView: View {
     @State private var alertMessage = ""
     
     var filterType: FilterType
+    
     
     var title: String {
         switch filterType {
@@ -70,6 +72,31 @@ struct ProspectsView: View {
                         .padding(.leading, 10)
                     }
                     .frame(height: 30)
+                    .swipeActions(edge: .trailing) {
+                        if person.isContacted {
+                            Button {
+                                prospects.toggle(person)
+                            } label: {
+                                Label("make it uncontacted", systemImage: "person.crop.circle.badge.xmark")
+                            }
+                            .tint(.red)
+                        } else {
+                            Button {
+                                prospects.toggle(person)
+                            } label: {
+                                Label("make it contacted", systemImage: "person.crop.circle.fill.badge.checkmark")
+                            }
+                            .tint(.green)
+                        }
+                    }
+                    .swipeActions(edge: .leading) {
+                        Button {
+                            addNotification(person)
+                        } label: {
+                            Label("Remind me", systemImage: "bell")
+                        }
+                        .tint(.mint)
+                    }
                 }
             }
                 .toolbar {
@@ -77,6 +104,13 @@ struct ProspectsView: View {
                         isShowingScanner = true
                     } label: {
                         Image(systemName: "qrcode.viewfinder")
+                    }
+                    
+                    Button("Test") {
+                        let ins = Prospect()
+                        ins.name = "test name"
+                        ins.emailAddress = "test address"
+                        prospects.add(ins)
                     }
                 }
                 .sheet(isPresented: $isShowingScanner) {
@@ -96,7 +130,7 @@ struct ProspectsView: View {
             newPerson.name = String(strData.first ?? "")
             newPerson.emailAddress = String(strData[strData.index(startIndex, offsetBy: 1)])
             // Add new person
-            prospects.people.append(newPerson)
+            prospects.add(newPerson)
         case .failure(let error):
             switch error {
             case .badInput:
@@ -111,6 +145,36 @@ struct ProspectsView: View {
             default:
                 alertTitle = "오류"
                 alertMessage = "예기치 못한 오류가 발생했습니다."
+            }
+        }
+    }
+    
+    func addNotification(_ prospect: Prospect) {
+        let center = UNUserNotificationCenter.current()
+        let addRequest = {
+            let contents = UNMutableNotificationContent()
+            contents.title = "접촉 확인"
+            contents.body = "\(prospect.name)분과 접촉하셨나요?"
+            contents.badge = 1
+            
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+            
+            let reqeust = UNNotificationRequest(identifier: "contact alarm", content: contents, trigger: trigger)
+            
+            center.add(reqeust)
+        }
+        
+        center.getNotificationSettings { settings in
+            if settings.authorizationStatus == .authorized {
+                addRequest()
+            } else {
+                center.requestAuthorization { success, error in
+                    if success {
+                        addRequest()
+                    } else {
+                        print(error?.localizedDescription ?? "error occured")
+                    }
+                }
             }
         }
     }

@@ -11,6 +11,7 @@
 		9B12EDAC2986580A0005BAEA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B12EDAB2986580A0005BAEA /* ContentView.swift */; };
 		9B12EDAE2986580C0005BAEA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B12EDAD2986580C0005BAEA /* Assets.xcassets */; };
 		9B12EDB22986580C0005BAEA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B12EDB12986580C0005BAEA /* Preview Assets.xcassets */; };
+		9BC0207E2990E6A100506425 /* ImageSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC0207D2990E6A100506425 /* ImageSaver.swift */; };
 		9BD35B34298BA46900B0A4C4 /* ProspectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD35B33298BA46900B0A4C4 /* ProspectsView.swift */; };
 		9BD35B36298BA48200B0A4C4 /* UserInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD35B35298BA48200B0A4C4 /* UserInformationView.swift */; };
 		9BD35B38298BA94E00B0A4C4 /* Prospect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD35B37298BA94E00B0A4C4 /* Prospect.swift */; };
@@ -24,6 +25,7 @@
 		9B12EDAD2986580C0005BAEA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9B12EDAF2986580C0005BAEA /* HotProspects.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HotProspects.entitlements; sourceTree = "<group>"; };
 		9B12EDB12986580C0005BAEA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		9BC0207D2990E6A100506425 /* ImageSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSaver.swift; sourceTree = "<group>"; };
 		9BD35B33298BA46900B0A4C4 /* ProspectsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProspectsView.swift; sourceTree = "<group>"; };
 		9BD35B35298BA48200B0A4C4 /* UserInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInformationView.swift; sourceTree = "<group>"; };
 		9BD35B37298BA94E00B0A4C4 /* Prospect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prospect.swift; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 				9B12EDA92986580A0005BAEA /* HotProspectsApp.swift */,
 				9B12EDAB2986580A0005BAEA /* ContentView.swift */,
 				9BD35B37298BA94E00B0A4C4 /* Prospect.swift */,
+				9BC0207D2990E6A100506425 /* ImageSaver.swift */,
 				9BD35B33298BA46900B0A4C4 /* ProspectsView.swift */,
 				9BD35B35298BA48200B0A4C4 /* UserInformationView.swift */,
 				9B12EDAD2986580C0005BAEA /* Assets.xcassets */,
@@ -158,6 +161,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BD35B34298BA46900B0A4C4 /* ProspectsView.swift in Sources */,
+				9BC0207E2990E6A100506425 /* ImageSaver.swift in Sources */,
 				9BD35B38298BA94E00B0A4C4 /* Prospect.swift in Sources */,
 				9BD35B36298BA48200B0A4C4 /* UserInformationView.swift in Sources */,
 				9B12EDAC2986580A0005BAEA /* ContentView.swift in Sources */,
@@ -290,6 +294,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "QR코드 스캔을 위한 사용";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "QR코드를 저장하기 위한 사용";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -328,6 +333,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "QR코드 스캔을 위한 사용";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "QR코드를 저장하기 위한 사용";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
