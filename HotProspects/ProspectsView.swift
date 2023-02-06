@@ -168,7 +168,7 @@ struct ProspectsView: View {
             if settings.authorizationStatus == .authorized {
                 addRequest()
             } else {
-                center.requestAuthorization { success, error in
+                center.requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
                     if success {
                         addRequest()
                     } else {
