@@ -21,6 +21,7 @@ struct ProspectsView: View {
     @State private var isShowingAlert = false
     @State private var alertTitle = ""
     @State private var alertMessage = ""
+    @State private var isShowingCD = false
     
     var filterType: FilterType
     
@@ -49,74 +50,106 @@ struct ProspectsView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(people) { person in
-                    HStack(spacing: 0) {
-                        Image(systemName: "person.crop.square")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundColor(.gray)
-                        VStack {
-                            HStack {
-                                Text(person.name)
-                                    .font(.body)
-                                Spacer()
+            ZStack {
+                List {
+                    ForEach(people) { person in
+                        HStack(spacing: 0) {
+                            Image(systemName: "person.crop.square")
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundColor( person.isContacted ? .green : .red)
+                            VStack {
+                                HStack {
+                                    Text(person.name)
+                                        .font(.body)
+                                    Spacer()
+                                }
+                                HStack {
+                                    Text(person.emailAddress)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                    Spacer()
+                                }
                             }
-                            HStack {
-                                Text(person.emailAddress)
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                Spacer()
+                            .padding(.leading, 10)
+                        }
+                        .frame(height: 30)
+                        .swipeActions(edge: .trailing) {
+                            if person.isContacted {
+                                Button {
+                                    prospects.toggle(person)
+                                } label: {
+                                    Label("make it uncontacted", systemImage: "person.crop.circle.badge.xmark")
+                                }
+                                .tint(.orange)
+                            } else {
+                                Button {
+                                    prospects.toggle(person)
+                                } label: {
+                                    Label("make it contacted", systemImage: "person.crop.circle.fill.badge.checkmark")
+                                }
+                                .tint(.green)
                             }
                         }
-                        .padding(.leading, 10)
-                    }
-                    .frame(height: 30)
-                    .swipeActions(edge: .trailing) {
-                        if person.isContacted {
-                            Button {
-                                prospects.toggle(person)
-                            } label: {
-                                Label("make it uncontacted", systemImage: "person.crop.circle.badge.xmark")
+                        .swipeActions(edge: .leading) {
+                            if !person.isContacted {
+                                Button {
+                                    addNotification(person)
+                                } label: {
+                                    Label("Remind me", systemImage: "bell")
+                                }
+                                .tint(.mint)
                             }
-                            .tint(.red)
-                        } else {
                             Button {
-                                prospects.toggle(person)
+                                prospects.remove(person)
                             } label: {
-                                Label("make it contacted", systemImage: "person.crop.circle.fill.badge.checkmark")
+                                Label("Delete", systemImage: "minus.circle")
+                                    .tint(.red)
                             }
-                            .tint(.green)
                         }
                     }
-                    .swipeActions(edge: .leading) {
+                }
+                    .toolbar {
                         Button {
-                            addNotification(person)
+                            isShowingScanner = true
                         } label: {
-                            Label("Remind me", systemImage: "bell")
+                            Image(systemName: "qrcode.viewfinder")
                         }
-                        .tint(.mint)
+                    }
+                    .sheet(isPresented: $isShowingScanner) {
+                        CodeScannerView(codeTypes: [.qr], completion: codeScannerHandler)
+                    }
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Button {
+                            isShowingCD = true
+                        } label: {
+                            Image(systemName: "repeat.circle")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 40)
+                                .foregroundColor(.cyan)
+                                .opacity(0.8)
+                                .padding(15)
+                        }
+                        .confirmationDialog("Select sorting method", isPresented: $isShowingCD) {
+                            Button("이름순") {
+                                prospects.sort(type: .name)
+                            }
+                            if filterType == .contacted {
+                                Button("최신순") {
+                                    prospects.sort(type: .recent)
+                                }
+                            }
+                        } message: {
+                            Text("리스트 표시방법")
+                        }
                     }
                 }
             }
-                .toolbar {
-                    Button {
-                        isShowingScanner = true
-                    } label: {
-                        Image(systemName: "qrcode.viewfinder")
-                    }
-                    
-                    Button("Test") {
-                        let ins = Prospect()
-                        ins.name = "test name"
-                        ins.emailAddress = "test address"
-                        prospects.add(ins)
-                    }
-                }
-                .sheet(isPresented: $isShowingScanner) {
-                    CodeScannerView(codeTypes: [.qr], completion: codeScannerHandler)
-                }
-                .navigationTitle(title)
+            .navigationTitle(title)
         }
     }
     
